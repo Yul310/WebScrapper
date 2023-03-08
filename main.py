@@ -5,4 +5,9 @@ search_term = "python"
 
 response = get(f"{base_url}{search_term}")
 
-print(response)
+if response.status_code != 200:
+    print("Can't request the website")
+else:
+    print(response.text)
+
+print(response.text)
