@@ -13,7 +13,11 @@ else:
     jobs = soup.find_all('section',class_="jobs")
 
     for job_section in jobs:
-        print(job_section.find_all('li'))
+        job_posts = job_section.find_all('li')
+        for post in job_posts:
+            print(post)
+            print('//////////////')
+
     
 
 # print(response.text)
