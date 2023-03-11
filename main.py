@@ -10,6 +10,10 @@ if response.status_code != 200:
     print("Can't request the website")
 else:
     soup = BeautifulSoup(response.text,"html.parser")
-    print(soup.find_all('section',class_="jobs"))
+    jobs = soup.find_all('section',class_="jobs")
+
+    for job_section in jobs:
+        print(job_section.find_all('li'))
+    
 
 # print(response.text)
