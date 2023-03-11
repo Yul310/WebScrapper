@@ -14,6 +14,7 @@ else:
 
     for job_section in jobs:
         job_posts = job_section.find_all('li')
+        job_posts.pop()
         for post in job_posts:
             print(post)
             print('//////////////')
