@@ -18,6 +18,9 @@ else:
         for post in job_posts:
             anchors = post.find_all('a')
             anchor = anchors[1]
+            link = anchor['href']
+            company, kind, region = anchor.find_all('span', calss_="rompany")
+            print('type',type(anchor))
             print(anchor['href'])
             # print('//////////////')
 
