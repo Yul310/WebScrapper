@@ -1,6 +1,9 @@
 from requests import get
 from bs4 import BeautifulSoup
 
+# base_url = "https://weworkremotely.com/remote-jobs/search?term="
+# search_term = "java"
+
 base_url = "https://weworkremotely.com/remote-jobs/search?term="
 search_term = "java"
 
@@ -23,6 +26,7 @@ else:
             title = anchor.find('span',class_='title')
             print(company.string,kind.string,region.string,title.string)
             job_data = {
+                'link':f"https://weworkremotely.com{link}",
                 'company':company.string,
                 'region': region.string,
                 'position' : title.string
