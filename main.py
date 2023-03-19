@@ -1,32 +1,31 @@
 
 from selenium import webdriver
-
-
-driver = webdriver.Chrome()
-# driver.get('https://kr.indeed.com/jobs?q=python&l=&from=searchOnHP&vjk=89395b6ac5014113')
-
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-from extractors.wwr import extract_wwr_jobs
-
-# base_url = 'https://www.indeed.com/jobs?q='
-# search_term = "python"
-# end_url = "&l=&vjk=d598cdf1dbd6f494"
-# test_url = "https://www.indeed.com/jobs?q=python&l=&vjk=d598cdf1dbd6f494"
-# response = get(f"{base_url}{search_term}{end_url}")
-# browser = driver.get('https://www.indeed.com/jobs?q=python&l=&from=searchOnHP&vjk=7537cb6fcb8ab5c2')
-browser = webdriver.Chrome()
-browser.get('https://www.indeed.com/jobs?q=python&l=&from=searchOnHP&vjk=7537cb6fcb8ab5c2')
 
 
-print(browser)
-print(browser.page_source)
 
-# if response.status_code != 200:
-#     print(response)
-#     print("Can't request page")
-# else:
-#     print(response.text)
+options = Options()
 
-# jobs = extract_wwr_jobs('python')
-# print(jobs)
+
+
+
+
+
+browser = webdriver.Chrome(options=options)
+browser.get('https://www.indeed.com/jobs?q=python&limit=10')
+soup = BeautifulSoup(browser.page_source, "html.parser")
+job_list = soup.find("ul",class_='jobsearch-ResultsList')
+jobs = job_list.find_all('li',recursive=False)
+
+for job in jobs:
+    zone = job.find('div', class_="mosic-zone")
+    if zone == None:
+        print("job li")
+    else:
+        print("mosaic li")
+
+# print(browser)
+# print(browser.page_source)
+
 
