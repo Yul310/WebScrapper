@@ -16,7 +16,16 @@ jobs = job_list.find_all('li', recursive=False)
 for job in jobs:
     zone = job.find('div', class_='mosaic-zone')
     if zone == None:
-        print('job li')
+        anchor = job.select_one("h2 a")
+        title = anchor['aria-label']
+        link = anchor['href']
+        print(title, link)
+        print("///////\n")
+
+
+        # h2 = job.find("h2", class_="jobTitle")
+        # a = h2.find("a")
+       
 
 
 
