@@ -4,36 +4,52 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
 
-options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
-driver = webdriver.Chrome("./chromedriver.exe", options=options)
-pageload = driver.get('https://indeed.com/jobs?q=python')
+def get_page_count(keyword):
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome("./chromedriver.exe", options=options)
+    pageload = driver.get(f'https://indeed.com/jobs?q={keyword}')
 
-soup=BeautifulSoup(driver.page_source, 'html.parser')
-job_list = soup.find('ul', class_='jobsearch-ResultsList')
-jobs = job_list.find_all('li', recursive=False)
+    soup=BeautifulSoup(driver.page_source, 'html.parser')
+    pagination = soup.find("nav", role="navigation")
+    pages = pagination.find_all("div", recursive = False)
+    print("pagenumber",len(pages))
 
-results = []
+get_page_count("react")
 
-for job in jobs:
-    zone = job.find('div', class_='mosaic-zone')
-    if zone == None:
-        anchor = job.select_one("h2 a")
-        title = anchor['aria-label']
-        link = anchor['href']
-        company = job.find("span", class_="companyName")
-        location = job.find("div", class_="companyLocation")
-        job_data = {
-            'company':company.string,
-            'position': title,
-            'location': location.string,
-            'link':f"https://indeed.com{link}"
 
-        }
-        results.append(job_data)
 
-for result in results:
-    print(result)
+def extract_indeed_jobs(keyword):
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome("./chromedriver.exe", options=options)
+    pageload = driver.get(f'https://indeed.com/jobs?q={keyword}')
+
+    soup=BeautifulSoup(driver.page_source, 'html.parser')
+    job_list = soup.find('ul', class_='jobsearch-ResultsList')
+    jobs = job_list.find_all('li', recursive=False)
+
+    results = []
+
+    for job in jobs:
+        zone = job.find('div', class_='mosaic-zone')
+        if zone == None:
+            anchor = job.select_one("h2 a")
+            title = anchor['aria-label']
+            link = anchor['href']
+            company = job.find("span", class_="companyName")
+            location = job.find("div", class_="companyLocation")
+            job_data = {
+                'company':company.string,
+                'position': title,
+                'location': location.string,
+                'link':f"https://indeed.com{link}"
+
+            }
+            results.append(job_data)
+
+    for result in results:
+        print(result)
         # print(title, link)
         # print("///////\n")
 
