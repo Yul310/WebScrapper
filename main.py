@@ -11,7 +11,10 @@ def get_page_count(keyword):
     pageload = driver.get(f'https://indeed.com/jobs?q={keyword}')
 
     soup=BeautifulSoup(driver.page_source, 'html.parser')
-    pagination = soup.find("nav", role="navigation")
+    # pagination = soup.find("nav", role="navigation")
+    pagination = soup.find("nav", {"aria-label":"pagination"})
+    if pagination == None:
+        return 1
     pages = pagination.find_all("div", recursive = False)
     print("pagenumber",len(pages))
 
