@@ -4,11 +4,16 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
 
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)
+driver = webdriver.Chrome("./chromedriver.exe", options=options)
+
+
+
+
 def get_page_count(keyword):
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)
-    driver = webdriver.Chrome("./chromedriver.exe", options=options)
-    pageload = driver.get(f'https://indeed.com/jobs?q={keyword}')
+    
+    driver.get(f"https://indeed.com/jobs?q={keyword}")
 
     soup=BeautifulSoup(driver.page_source, 'html.parser')
     # pagination = soup.find("nav", role="navigation")
@@ -26,42 +31,59 @@ def get_page_count(keyword):
 
     print("pagenumber",len(pages))
 
-get_page_count("react")
+# get_page_count("react")
 
 
 
 def extract_indeed_jobs(keyword):
     pages = get_page_count(keyword)
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)
-    driver = webdriver.Chrome("./chromedriver.exe", options=options)
-    pageload = driver.get(f'https://indeed.com/jobs?q={keyword}')
-
-    soup=BeautifulSoup(driver.page_source, 'html.parser')
-    job_list = soup.find('ul', class_='jobsearch-ResultsList')
-    jobs = job_list.find_all('li', recursive=False)
-
+    print(pages,"pages")
     results = []
 
-    for job in jobs:
-        zone = job.find('div', class_='mosaic-zone')
-        if zone == None:
-            anchor = job.select_one("h2 a")
-            title = anchor['aria-label']
-            link = anchor['href']
-            company = job.find("span", class_="companyName")
-            location = job.find("div", class_="companyLocation")
-            job_data = {
-                'company':company.string,
-                'position': title,
-                'location': location.string,
-                'link':f"https://indeed.com{link}"
+   
 
-            }
-            results.append(job_data)
+    for page in range(pages):
+        print(page,"page")
+        final_url = f'https://indeed.com/jobs?q={keyword}&start={page*10}'
+        
+        driver.get(final_url)
+        print("finalurl",final_url)
+
+        if final_url == None:
+            print("can't request the page")
+        else:
+
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            job_list = soup.find('ul', class_='jobsearch-ResultsList')
+            jobs = job_list.find_all('li', recursive=False)
+
+            # print(jobs)
+
+            for job in jobs:
+                zone = job.find('div', class_='mosaic-zone')
+                # print("zone",zone)
+                if zone == None:
+                    anchor = job.select_one("h2 a")
+                    title = anchor['aria-label']
+                    link = anchor['href']
+                    company = job.find("span", class_="companyName")
+                    location = job.find("div", class_="companyLocation")
+                    job_data = {
+                        'company':company.string,
+                        'position': title,
+                        'location': location.string,
+                        'link':f"https://indeed.com{link}"
+
+                    }
+                    # print("jobdata",job_data)
+                    results.append(job_data)
+
+    return results
 
     for result in results:
-        print(result)
+            print("result",result)
+
+extract_indeed_jobs("python")
         # print(title, link)
         # print("///////\n")
 
