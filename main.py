@@ -16,6 +16,14 @@ def get_page_count(keyword):
     if pagination == None:
         return 1
     pages = pagination.find_all("div", recursive = False)
+    count = len(pages)
+    if count >=5:
+        print(5)
+        return 5
+    else:
+        print(count)
+        return count
+
     print("pagenumber",len(pages))
 
 get_page_count("react")
@@ -23,6 +31,7 @@ get_page_count("react")
 
 
 def extract_indeed_jobs(keyword):
+    pages = get_page_count(keyword)
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     driver = webdriver.Chrome("./chromedriver.exe", options=options)
