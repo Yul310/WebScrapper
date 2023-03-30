@@ -4,15 +4,25 @@ from extractors.wwr import extract_wwr_jobs
 
 keyword = input("What do you want to search for?")
 
-file = open(f"{keyword}.csv")
+
+
+indeed = extract_indeed_jobs(keyword)
+wwr = extract_wwr_jobs(keyword)
+jobs = indeed + wwr
 
 
 
-# indeed = extract_indeed_jobs(keyword)
-# wwr = extract_wwr_jobs(keyword)
 
-# jobs = indeed + wwr
+file = open(f"{keyword}.csv", "w")
+
+file.write("Position,Company,Location,URL\n")
 
 for job in jobs:
-    print(job)
-    print("/////\n/////")
+    file.write(f"{job['position']},{job['company']},{job['location']},{job['link']}\n")
+
+
+file.close()
+
+# for job in jobs:
+#     print(job)
+#     print("/////\n/////")

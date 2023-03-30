@@ -69,10 +69,11 @@ def extract_indeed_jobs(keyword):
                     company = job.find("span", class_="companyName")
                     location = job.find("div", class_="companyLocation")
                     job_data = {
+                        'link':f"https://indeed.com{link}",
                         'company':company.string,
                         'position': title,
                         'location': location.string,
-                        'link':f"https://indeed.com{link}"
+                      
 
                     }
                     # print("jobdata",job_data)
