@@ -11,7 +11,13 @@
  <h1>Search Result for "{{keyword}}":</h1>
 
  {% for job in jobs %}
- <div>{{job.link}}</div>
+ <div>
+    <span>{{job.position}}</span>
+    <span>{{job.company}}</span>
+    <span>{{job.location}}</span>
+    <a href="{{job.link}}" target = "_blank">Apply now &rarr;</a>
+    
+</div>
  {% endfor %}
 
    
