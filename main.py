@@ -11,10 +11,10 @@
 
 # save_to_file(keyword, jobs)
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_file
 from extractors.indeed import extract_indeed_jobs
 from extractors.wwr import extract_wwr_jobs
-
+from file import save_to_file
 
 app = Flask("JobScrapper")
 db={}
@@ -49,8 +49,10 @@ def export():
     keyword = request.args.get("keyword")
     if keyword == None or keyword == "":
         return redirect("/")
-    if keyword is not db:
+    if keyword not in db:
         return redirect(f"/search?keyword={keyword}")
-
+    
+    save_to_file(keyword,db[keyword])
+    return send_file(f"{keyword}.csv",as_attachment=True)
 
 app.run("0.0.0.0")
