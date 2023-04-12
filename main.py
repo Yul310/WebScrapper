@@ -11,7 +11,7 @@
 
 # save_to_file(keyword, jobs)
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from extractors.indeed import extract_indeed_jobs
 from extractors.wwr import extract_wwr_jobs
 
@@ -28,14 +28,21 @@ def home():
 def search():
     print(request.args)
     keyword = request.args.get("keyword")
-    if keyword in db:
-        jobs = db[keyword]
+    print("keykey",keyword)
+
+    if keyword == None or keyword == "":
+        print("no no keyword")
+        return redirect("/")
     else:
-        indeed = extract_indeed_jobs(keyword)
-        wwr = extract_wwr_jobs(keyword)
-        jobs = indeed + wwr
-        db[keyword] = jobs
-    return render_template("search.html", keyword=keyword, jobs=jobs)
+        print("yes keyword",keyword)
+        if keyword in db:
+            jobs = db[keyword]
+        else:
+            indeed = extract_indeed_jobs(keyword)
+            wwr = extract_wwr_jobs(keyword)
+            jobs = indeed + wwr
+            db[keyword] = jobs
+        return render_template("search.html", keyword=keyword, jobs=jobs)
 
 
 app.run("0.0.0.0")
